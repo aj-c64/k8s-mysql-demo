@@ -11,6 +11,10 @@ pipeline {
         // Example:
         // NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-releases/'
         NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-snapshots/'
+
+        // 👇 Adjust these to match your K8s Deployment
+        K8S_NAMESPACE       = 'default'
+        K8S_DEPLOYMENT_NAME = 'springboot-webapp'  // or springboot-webapp, etc.
     }
 
     stages {
@@ -43,11 +47,27 @@ pipeline {
                 }
             }
         }
+
+         // 🔽 NEW LAST STAGE
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh """
+                    echo "Applying Kubernetes manifests..."
+
+                    # 👇 These files should be in your repo
+                    kubectl apply -f k8s/springboot-deployment.yaml
+                    kubectl apply -f k8s/springboot-service.yaml
+
+                    echo "Waiting for rollout of deployment \${K8S_DEPLOYMENT_NAME}..."
+                    kubectl -n \${K8S_NAMESPACE} rollout status deployment/\${K8S_DEPLOYMENT_NAME}
+                """
+            }
+        }
     }
 
     post {
         success {
-            echo '✅ Build succeeded and JAR was deployed to Nexus.'
+            echo '✅ Build succeeded and JAR was deployed to Nexus, and webapp deployed to Kubernetes.'
         }
         failure {
             echo '❌ Pipeline failed. Check the logs for the failing stage.'
