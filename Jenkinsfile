@@ -38,7 +38,7 @@ pipeline {
                     // put credentials directly in the repo URL (HTTP basic auth)
                     sh '''
                         mvn deploy -DskipTests \
-                          -DaltDeploymentRepository=nexus::default::http://${NEXUS_USER}:${NEXUS_PASS}@192.168.49.2:30081/repository/maven-releases/
+                          -DaltDeploymentRepository=nexus::default::http://${NEXUS_USER}:${NEXUS_PASS}@192.168.49.2:30081/repository/maven-snapshots/
                     '''
                 }
             }
