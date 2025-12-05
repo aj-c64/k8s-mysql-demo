@@ -12,6 +12,7 @@ pipeline {
         // NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-releases/'
         NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-snapshots/'
 
+        KUBECONFIG = credentials('k8s-creds')
         // 👇 Adjust these to match your K8s Deployment
         K8S_NAMESPACE       = 'default'
         K8S_DEPLOYMENT_NAME = 'springboot-webapp'  // or springboot-webapp, etc.
@@ -53,6 +54,8 @@ pipeline {
             steps {
                 sh """
                     echo "Applying Kubernetes manifests..."
+
+                    kubectl get pods
 
                     # 👇 These files should be in your repo
                     kubectl apply -f k8s/springboot-deployment.yaml
