@@ -18,7 +18,7 @@ spec:
         - name: springboot-webapp
           # TODO: replace this with your real image name
           image: ajc64/springboot-webapp:latest
-          imagePullPolicy: IfNotPresent
+          imagePullPolicy: Always
           ports:
             - containerPort: 8080
           # Optional: env vars for MySQL if your app needs them
@@ -29,5 +29,6 @@ spec:
               value: youruser
             - name: SPRING_DATASOURCE_PASSWORD
               value: yourpass
+
 
 
