@@ -16,6 +16,10 @@ pipeline {
         // 👇 Adjust these to match your K8s Deployment
         K8S_NAMESPACE       = 'default'
         K8S_DEPLOYMENT_NAME = 'springboot-webapp'  // or springboot-webapp, etc.
+
+        // Docker image info
+        IMAGE_NAME = 'ajc64/springboot-webapp'
+        IMAGE_TAG  = 'latest'
     }
 
     stages {
@@ -45,6 +49,27 @@ pipeline {
                         mvn deploy -DskipTests \
                           -DaltDeploymentRepository=nexus::default::http://${NEXUS_USER}:${NEXUS_PASS}@192.168.49.2:30081/repository/maven-snapshots/
                     '''
+                }
+            }
+        }
+        
+        stage('Build & Push Docker Image') {
+            steps {
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    sh """
+                        echo "Logging in to Docker Hub..."
+                        echo "\$DOCKER_PASS" | docker login -u "\$DOCKER_USER" --password-stdin
+
+                        echo "Building Docker image..."
+                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
+
+                        echo "Pushing Docker image..."
+                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
+                    """
                 }
             }
         }
