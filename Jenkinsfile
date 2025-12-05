@@ -58,7 +58,7 @@ pipeline {
                     curl -LO "https://storage.googleapis.com/kubernetes-release/release/\$(curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt)/bin/linux/amd64/kubectl"
                     chmod u+x ./kubectl
                     
-                    kubectl get pods
+                    ./kubectl get pods
 
                     # 👇 These files should be in your repo
                     kubectl apply -f k8s/springboot-deployment.yaml
