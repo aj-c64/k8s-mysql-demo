@@ -12,7 +12,7 @@ pipeline {
         // NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-releases/'
         NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-snapshots/'
 
-        KUBECONFIG = credentials('k8s-creds')
+        //KUBECONFIG = credentials('k8s-creds')
         // 👇 Adjust these to match your K8s Deployment
         K8S_NAMESPACE       = 'default'
         K8S_DEPLOYMENT_NAME = 'springboot-webapp'  // or springboot-webapp, etc.
