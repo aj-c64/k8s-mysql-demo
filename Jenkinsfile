@@ -61,11 +61,11 @@ pipeline {
                     ./kubectl get pods
 
                     # 👇 These files should be in your repo
-                    kubectl apply -f k8s/springboot-deployment.yaml
-                    kubectl apply -f k8s/springboot-service.yaml
+                    ./kubectl apply -f k8s/springboot-deployment.yaml
+                    ./kubectl apply -f k8s/springboot-service.yaml
 
                     echo "Waiting for rollout of deployment \${K8S_DEPLOYMENT_NAME}..."
-                    kubectl -n \${K8S_NAMESPACE} rollout status deployment/\${K8S_DEPLOYMENT_NAME}
+                    ./kubectl -n \${K8S_NAMESPACE} rollout status deployment/\${K8S_DEPLOYMENT_NAME}
                 """
             }
         }
