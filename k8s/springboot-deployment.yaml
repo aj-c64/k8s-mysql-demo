@@ -1,0 +1,31 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: k8s-mysql-demo        # <-- match this with K8S_DEPLOYMENT_NAME in Jenkinsfile
+  labels:
+    app: k8s-mysql-demo
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: k8s-mysql-demo
+  template:
+    metadata:
+      labels:
+        app: k8s-mysql-demo
+    spec:
+      containers:
+        - name: k8s-mysql-demo
+          # TODO: replace this with your real image name
+          image: your-docker-username/k8s-mysql-demo:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 8080
+          # Optional: env vars for MySQL if your app needs them
+          env:
+            - name: SPRING_DATASOURCE_URL
+            value: jdbc:mysql://mysql-service:3306/yourdb
+            - name: SPRING_DATASOURCE_USERNAME
+            value: youruser
+            - name: SPRING_DATASOURCE_PASSWORD
+            value: yourpass
