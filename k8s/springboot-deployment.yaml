@@ -24,11 +24,17 @@ spec:
           # Optional: env vars for MySQL if your app needs them
           env:
             - name: SPRING_DATASOURCE_URL
-              value: jdbc:mysql://mysql:3306/yourdb
+              value: jdbc:mysql://mysql:3306/mydb
             - name: SPRING_DATASOURCE_USERNAME
-              value: youruser
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_USER
             - name: SPRING_DATASOURCE_PASSWORD
-              value: yourpass
+              valueFrom:
+                configMapKeyRef:
+                  name: mysql-config
+                  key: MYSQL_PASSWORD
 
 
 
