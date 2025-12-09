@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     tools {
-        // Must match the Maven name in Manage Jenkins → Tools → Maven
+
         maven 'maven-3.9.11'
     }
 
@@ -13,13 +13,12 @@ pipeline {
         NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-snapshots/'
 
         //KUBECONFIG = credentials('k8s-creds')
-        // 👇 Adjust these to match your K8s Deployment
         K8S_NAMESPACE       = 'default'
         K8S_DEPLOYMENT_NAME = 'springboot-webapp'  // or springboot-webapp, etc.
 
         // Docker image info
-        IMAGE_NAME = 'ajc64/springboot-webapp'
-        IMAGE_TAG  = 'latest'
+        //IMAGE_NAME = 'ajc64/springboot-webapp'
+        //IMAGE_TAG  = 'latest'
     }
 
     stages {
@@ -53,28 +52,8 @@ pipeline {
             }
         }
         
-        stage('Build & Push Docker Image') {
-            steps {
-                withCredentials([usernamePassword(
-                    credentialsId: 'dockerhub-creds',
-                    usernameVariable: 'DOCKER_USER',
-                    passwordVariable: 'DOCKER_PASS'
-                )]) {
-                    sh """
-                        echo "Logging in to Docker Hub..."
-                        echo "\$DOCKER_PASS" | docker login -u "\$DOCKER_USER" --password-stdin
+        
 
-                        echo "Building Docker image..."
-                        docker build -t ${IMAGE_NAME}:${IMAGE_TAG} .
-
-                        echo "Pushing Docker image..."
-                        docker push ${IMAGE_NAME}:${IMAGE_TAG}
-                    """
-                }
-            }
-        }
-
-         // 🔽 NEW LAST STAGE
         stage('Deploy to Kubernetes') {
             steps {
                 sh """
@@ -85,7 +64,6 @@ pipeline {
                     
                     ./kubectl get pods
 
-                    # 👇 These files should be in your repo
                     ./kubectl apply -f k8s/springboot-deployment.yaml
                     ./kubectl apply -f k8s/springboot-service.yaml
 
@@ -98,10 +76,10 @@ pipeline {
 
     post {
         success {
-            echo '✅ Build succeeded and JAR was deployed to Nexus, and webapp deployed to Kubernetes.'
+            echo 'Build succeeded and JAR was deployed to Nexus, and webapp deployed to Kubernetes.'
         }
         failure {
-            echo '❌ Pipeline failed. Check the logs for the failing stage.'
+            echo 'Pipeline failed. Check the logs for the failing stage.'
         }
     }
 }
