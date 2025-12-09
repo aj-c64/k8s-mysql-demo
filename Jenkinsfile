@@ -7,9 +7,7 @@ pipeline {
     }
 
     environment {
-        // Your Nexus Maven repo URL (from Nexus → Repositories → maven-releases → Repository URL)
-        // Example:
-        // NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-releases/'
+
         NEXUS_REPO_URL = 'http://192.168.49.2:30081/repository/maven-snapshots/'
 
         //KUBECONFIG = credentials('k8s-creds')
